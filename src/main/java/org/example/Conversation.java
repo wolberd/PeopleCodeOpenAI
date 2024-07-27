@@ -71,6 +71,21 @@ public class Conversation {
         String[] questionArray = responseText.split("%%");
         return List.of(questionArray);
     }
+
+
+    public void resetConversation() {
+
+        chatMemory.clear();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String toString() {
+
+        return chatMemory.messages().toString();
+    }
     /**
      *
      * main is a sample that asks two questions, the second of which
@@ -98,11 +113,4 @@ public class Conversation {
 
     }
 
-    public void resetConversation() {
-        chatMemory.clear();
-    }
-    // for testing only, not pretty at this point
-    public String toString() {
-        return chatMemory.messages().toString();
-    }
 }
