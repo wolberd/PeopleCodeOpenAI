@@ -1,4 +1,4 @@
-package org.example;
+package ai.peoplecode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,6 @@ import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.model.output.Response;
-import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 
 /**
@@ -22,18 +21,28 @@ import dev.langchain4j.memory.chat.MessageWindowChatMemory;
  * Client can also get sample questions based on a given context, and can reset
  * conversation to start over.
  */
-public class Conversation {
+public class OpenAIConversation {
     private MessageWindowChatMemory chatMemory;
     private ChatLanguageModel chatModel;
 
-    // Constructor
-    public Conversation(String apiKey) {
-        this.chatModel = OpenAiChatModel.withApiKey(apiKey);
+    // Constructors
+    public OpenAIConversation(){
+        // demo is a key that LangChain4j provides to access OpenAI
+        // for free. It has limitations, e.g., you have to use 3.5-turbo,
+        // but is useful for testing.
+        // Once you get going, you should get your own key from OpenAI.
+        this("demo", "gpt-3.5-turbo");
+    }
+    public OpenAIConversation(String apiKey) {
+        this(apiKey, "gpt-3.5-turbo");
+    }
+    public OpenAIConversation( String apiKey, String modelName) {
+        this.chatModel = OpenAiChatModel.builder().apiKey(apiKey).modelName(modelName).build();
         this.chatMemory=MessageWindowChatMemory.withMaxMessages(10);
     }
 
     /** askQuestion allows user to ask a question with context (e.g., instructions
-     * for how OpenAI should respondd. It adds the context and question to the memory,
+     * for how OpenAI should respond. It adds the context and question to the memory,
      * in the form langchain4j wants, then asks the question, then puts response into memory and returns text of response. in the form
      */
 
@@ -52,7 +61,7 @@ public class Conversation {
     }
 
     /**
-     * Method to generate sample questions with a given context. You can specify the number of questions
+     * generateSampleQuestions generate sample questions with a given context. You can specify the number of questions
      * and the max words that should be generated for each question. This method is
      * often used to provide user with sample questions to trigger the dialogue.
      */
@@ -71,16 +80,13 @@ public class Conversation {
         String[] questionArray = responseText.split("%%");
         return List.of(questionArray);
     }
-
-
     public void resetConversation() {
-
         chatMemory.clear();
     }
 
     /**
      *
-     * @return
+     * @return the messages thus far
      */
     public String toString() {
 
@@ -94,7 +100,7 @@ public class Conversation {
 
     public static void main(String[] args) {
         // Example conversation
-        Conversation conversation = new Conversation("demo");
+        OpenAIConversation conversation = new OpenAIConversation("demo");
         // Generate sample questions
         List<String> questions = conversation.generateSampleQuestions("Questions about films in the 1960s", 3, 10);
         System.out.println("Sample questions: " + questions);
