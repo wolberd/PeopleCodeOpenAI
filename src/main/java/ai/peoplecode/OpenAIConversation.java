@@ -31,10 +31,10 @@ public class OpenAIConversation {
         // for free. It has limitations, e.g., you have to use 3.5-turbo,
         // but is useful for testing.
         // Once you get going, you should get your own key from OpenAI.
-        this("demo", "gpt-3.5-turbo");
+        this("demo", "gpt-4o-mini");
     }
     public OpenAIConversation(String apiKey) {
-        this(apiKey, "gpt-3.5-turbo");
+        this(apiKey, "gpt-4o-mini");
     }
     public OpenAIConversation( String apiKey, String modelName) {
         this.chatModel = OpenAiChatModel.builder().apiKey(apiKey).modelName(modelName).build();
@@ -100,7 +100,7 @@ public class OpenAIConversation {
 
     public static void main(String[] args) {
         // Example conversation
-        OpenAIConversation conversation = new OpenAIConversation("demo");
+        OpenAIConversation conversation = new OpenAIConversation();
         // Generate sample questions
         List<String> questions = conversation.generateSampleQuestions("Questions about films in the 1960s", 3, 10);
         System.out.println("Sample questions: " + questions);
